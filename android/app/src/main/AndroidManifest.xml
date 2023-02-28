@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_fundamental">
+    package="com.andrew.flutter_fundamental">
    <application
         android:label="flutter_fundamental"
         android:name="${applicationName}"

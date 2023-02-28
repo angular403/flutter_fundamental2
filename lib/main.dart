@@ -1,9 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_fundamental/bloc/counter_bloc.dart';
+import 'package:flutter_fundamental/main_page.dart';
 import 'package:flutter_fundamental/number_card.dart';
+import 'package:flutter_fundamental/timeline.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -20,7 +25,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainPage extends StatelessWidget {
+class counterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CounterState counterState = context.watch<CounterBloc>().state;
