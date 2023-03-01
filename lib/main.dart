@@ -1,74 +1,59 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_fundamental/bloc/counter_bloc.dart';
-import 'package:flutter_fundamental/main_page.dart';
-import 'package:flutter_fundamental/number_card.dart';
-import 'package:flutter_fundamental/timeline.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CounterBloc(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: MainPage(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Latihan(),
     );
   }
 }
 
-class counterPage extends StatelessWidget {
+class Latihan extends StatelessWidget {
+  const Latihan({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    CounterState counterState = context.watch<CounterBloc>().state;
-    int number = context.select<CounterBloc, int>((CounterBloc) =>
-        (CounterBloc.state is CounterValue)
-            ? (CounterBloc.state as CounterValue).value
-            : null);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Bloc'),
+        title: Text('Latihan Elevated Button'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              BlocBuilder<CounterBloc, CounterState>(
-                builder: (context, state) {
-                  return NumberCard("Bloc\nBuilder",
-                      (state is CounterValue) ? state.value : null);
-                },
-              ),
-              SizedBox(width: 40),
-              NumberCard("Watch",
-                  (counterState is CounterValue) ? counterState.value : null),
-              SizedBox(width: 40),
-              NumberCard("Select", number),
-            ],
-          ),
-          SizedBox(height: 40),
-          RaisedButton(
-            onPressed: () {
-              context.read<CounterBloc>().add(Increment());
-            },
-            child: Text(
-              'INCREMENT',
-              style: TextStyle(color: Colors.white),
+      body: Center(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {},
+              child: Text('Button 1 '),
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.red,
+                  minimumSize: Size(200, 40),
+                  shape: StadiumBorder(),
+                  elevation: 2,
+                  shadowColor: Colors.green,
+                  onSurface: Colors.red,
+                  side: BorderSide(width: 2, color: Colors.red.shade900)),
             ),
-            shape: StadiumBorder(),
-            color: Colors.green[800],
-          )
-        ],
+            ElevatedButton.icon(
+              onPressed: () {},
+              icon: Icon(Icons.ac_unit),
+              label: Text('Button 2'),
+              style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all(Colors.yellow),
+                  backgroundColor: MaterialStateProperty.resolveWith((states) =>
+                      states.any((element) => element == MaterialState.pressed)
+                          ? Colors.purple
+                          : Colors.red), 
+                          overlayColor: MaterialStateProperty.all(Colors.green)),
+            ),
+          ],
+        ),
       ),
     );
   }
