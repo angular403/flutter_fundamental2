@@ -30,7 +30,55 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       debugShowCheckedModeBanner: false,
-      home: LatihanDio(),
+      home: LatihanTdd(),
+    );
+  }
+}
+
+class LatihanTdd extends StatefulWidget {
+  const LatihanTdd({Key? key}) : super(key: key);
+
+  @override
+  State<LatihanTdd> createState() => _LatihanTddState();
+}
+
+class _LatihanTddState extends State<LatihanTdd> {
+  TextEditingController controller = TextEditingController(text: '0');
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('TDD DEMO')),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // user == null ? const Text('no data') : Text('ID: ${user!.id}'),
+          // if (user != null) Text('Name: ${user!.name}'),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 50,
+                child: TextField(
+                    controller: controller, keyboardType: TextInputType.number),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    // user = await UserRepository()
+                    //     .getUser(int.tryParse(controller.text) ?? 0);
+
+                    // setState(() {});
+                  },
+                  child: const Text('Get User')),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
