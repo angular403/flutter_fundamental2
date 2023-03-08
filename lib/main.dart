@@ -1,7 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_fundamental/bloc/user_bloc.dart';
+import 'package:flutter_fundamental/person.dart';
+import 'package:flutter_fundamental/personCard.dart';
+import 'package:flutter_fundamental/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,14 +25,66 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UserBloc(),
-      child: MaterialApp(
-        localizationsDelegates: context.localizationDelegates,
-        supportedLocales: context.supportedLocales,
-        locale: context.locale,
-        debugShowCheckedModeBanner: false,
-        home: MultiLanguage(),
+    return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      debugShowCheckedModeBanner: false,
+      home: LatihanDio(),
+    );
+  }
+}
+
+class LatihanDio extends StatefulWidget {
+  LatihanDio({Key? key}) : super(key: key);
+
+  @override
+  State<LatihanDio> createState() => _LatihanDioState();
+}
+
+class _LatihanDioState extends State<LatihanDio> {
+  Person? person;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Latihan DIO'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            person != null ? PersonCard(person: person!) : Text('no data'),
+            const SizedBox(height: 100),
+            ElevatedButton(
+              onPressed: () async {
+                Person? result = await Services.getById(2);
+
+                if (result != null) {
+                  setState(() {
+                    person = result;
+                  });
+                }
+              },
+              child: Text('GET'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                Person? result = await Services.createUser(
+                    'Andrew', 'wiliam', 'andrew@gmail.com');
+
+                if (result != null) {
+                  setState(() {
+                    person = result;
+                  });
+                }
+              },
+              child: Text('POST'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -82,62 +135,6 @@ class MultiLanguage extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
-    return Scaffold(
-      appBar: AppBar(
-        title: BlocBuilder<UserBloc, UserState>(
-          builder: (context, state) {
-            return Text('Welcome ${state.user.name}');
-          },
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                return Text(
-                    'Hi.. My Name ${state.user.name} and my age is  ${state.user.age} year');
-              },
-            ),
-            SizedBox(height: 40),
-            ElevatedButton(
-                onPressed: () {
-                  context.read<UserBloc>().add(BirthdayEvent());
-                },
-                child: Text('Birthday')),
-            Container(
-              margin: EdgeInsets.all(15),
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  fillColor: Colors.lightBlue[50],
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
-            ElevatedButton(
-              child: Text('Change Name'),
-              onPressed: () {
-                context.read<UserBloc>().add(ChangeNameEvent(controller.text));
-              },
-            ),
-          ],
         ),
       ),
     );
