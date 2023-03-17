@@ -21,7 +21,18 @@ class GoogleSignInPage extends StatelessWidget {
 
             //* SIGN IN STATUS
             // CODE HERE: Change status based on current user
-            const Text("You haven't signed in yet"),
+            StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.userChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      "SIGNED IN AS : ${FirebaseAuth.instance.currentUser!.displayName} (${FirebaseAuth.instance.currentUser!.email})",
+                      textAlign: TextAlign.center,
+                    );
+                  } else {
+                    return Text("You haven't signed in yet");
+                  }
+                }),
             const SizedBox(height: 15),
 
             //* SIGN IN BUTTON
@@ -33,9 +44,35 @@ class GoogleSignInPage extends StatelessWidget {
                           MaterialStateProperty.all(Colors.purple.shade900)),
                   onPressed: () async {
                     // CODE HERE: Sign in with Google Credential / Sign out from firebase & Google
+                    if (FirebaseAuth.instance.currentUser == null) {
+                      GoogleSignInAccount? account =
+                          await GoogleSignIn().signIn();
+                      if (account != null) {
+                        GoogleSignInAuthentication googleAuth =
+                            await account.authentication;
+                        OAuthCredential credential =
+                            GoogleAuthProvider.credential(
+                          accessToken: googleAuth.accessToken,
+                          idToken: googleAuth.idToken,
+                        );
+                        await FirebaseAuth.instance
+                            .signInWithCredential(credential);
+                      }
+                    } else {
+                      GoogleSignIn().signOut();
+                      FirebaseAuth.instance.signOut();
+                    }
                   },
                   // CODE HERE: Change button text based on current user
-                  child: const Text("Sign In")),
+                  child: StreamBuilder<User?>(
+                      stream: FirebaseAuth.instance.userChanges(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Text("Sign Out");
+                        } else {
+                          return Text("Sign In");
+                        }
+                      })),
             )
           ],
         ),
