@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:360238510529:android:0d4172773b294cafb13f40",
+        "mobilesdk_app_id": "1:360238510529:android:530fb3e2a9593075b13f40",
         "android_client_info": {
           "package_name": "com.andrew.flutter_fundamental"
         }
